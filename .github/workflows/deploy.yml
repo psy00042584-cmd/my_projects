@@ -48,4 +48,4 @@ jobs:
                 source: .
                 # aws ec2 서버의 특정 위치에 카피
                 # /home/ubuntu/projects/*.* 세팅
-                target: "/home/ubuntu/projects"
+                target: "/home/ubuntu/projects" 
