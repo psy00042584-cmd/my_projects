@@ -26,5 +26,9 @@ def home(req:Request):  # 요청객체가 함수 인자로 전달됨
     # -> 클라이언트는 화면을 보게 됨
     return templates.TemplateResponse(req, "index.html")
 
-    pass
+   # pass
+# 로그인 페이지 라우팅 처리
+@app.get("/auth/login")
+def login(req:Request):
+    return templates.TemplateResponse(req, "login.html")
 # 4. 서버 가동 => 명령어 대체
