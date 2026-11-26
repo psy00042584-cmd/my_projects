@@ -3,8 +3,6 @@ services:
     image: mysql
     container_name: mysql_db
     restart: always
-    env_file:
-      - .env
     environment:
       MYSQL_ROOT_PASSWORD: 1234
       MYSQL_DATABASE: memo
@@ -18,16 +16,19 @@ services:
       - my-net
 
   app:
+    # 아래 코드는 로컬환경(개발환경)에서 유용함
+    # EC2에서 컴포즈가 가동할 때는 image: <dockerhub 계정>/fastapi-app:1.0 변경
+    # 이미지는 CI서버에서 생성함
     build: ./app
     container_name: fastapi_app
     restart: unless-stopped
     ports:
       - "8000:8000"
     command: uvicorn main:app --host 0.0.0.0 --port 8000
+    # 최종 배포판에서는 필요가 없음 -> 수정 내용있으면 이미지 업데이트, 컨테이너 교체
     volumes:
       - ./app:/app
     environment:
-      AI_GPT_KEY: ${AI_GPT_KEY}
       DATABASE_URL: "mysql+pymysql://root:1234@db:3306/memo"
     networks:
       - my-net
@@ -35,13 +36,15 @@ services:
       - db
 
   proxy:
-    image: nginx:alpine
+    # 추후 이미지는 ci에서 처리, ec2 컴포즈 에서는 image:<dockerhub 계정>/nginx-proxy:1.0 변경
+    #image: nginx:alpine
+    build: ./nginx
     container_name: nginx_proxy
     restart: unless-stopped
     ports:
       - "80:80"
-    volumes:
-      - ./proxy/web.conf:/etc/nginx/conf.d/default.conf
+    #volumes:
+    #  - ./proxy/web.conf:/etc/nginx/conf.d/default.conf
     networks:
       - my-net
     depends_on:
