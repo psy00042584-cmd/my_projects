@@ -17,7 +17,7 @@ jobs:
         # 세부작업 지정
         steps:
             # CI 작업 (대부분 주요 작업 생략)
-            # 1. githbu에 저장되어있는 최신 내용을 체크아웃(소스코드 모두 다운로드)
+            # 1. github에 저장되어있는 최신 내용을 체크아웃(소스코드 모두 다운로드)
             - name: 코드 checkout
               uses: actions/checkout@v5
 
@@ -49,3 +49,21 @@ jobs:
                 # aws ec2 서버의 특정 위치에 카피
                 # /home/ubuntu/projects/*.* 세팅
                 target: "/home/ubuntu/projects" 
+
+            # 서비스 재가동 명령 전달
+            - name: Restart Service
+              uses: appleboy/scp-action@master
+              with:
+                # EC2 접속 정보
+                host: ${{ secrets.HOST }}
+                username: ${{ secrets.USERNAME }}
+                password: ${{ secrets.EC2_KEY }}
+                port: 22
+                # 스크립트 -> 접속 후 처리해야할 명령어 n개 나열
+                script: |
+                  # 코드가 엄청 증가해서 새로운 패키지 사용하여 업데이트 => 패키지 설치 필요
+                  # 가상환경 활성화 => 패키지 설치 추가해야함
+                  # cd /home/ubuntu/projects
+                  # ./web/bin/pip install -r requirements.txt
+                  # restart : stop -> start
+                  sudo systemctl restart hello.service
