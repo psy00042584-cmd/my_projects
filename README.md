@@ -18,3 +18,35 @@ CI/CD를 위한 프로젝트. 간단한 대시보드 구성
 ```
 tree /F /A >> struct.txt
 ```
+```
+C:.
+|   .gitignore
+|   docker-compose.yml
+|   README.md
+|   struct.txt
+|   
++---.github
+|   \---workflows
+|           deploy.yml
+|           
++---app
+|   |   main.py
+|   |   requirements.txt
+|   |   
+|   +---static
+|   |   +---assets
+|   |   |   \---img
+|   |   |       *.png|*.jpg
+|   |   +---css
+|   |   |       *.css
+|   |   \---js
+|   |           *.js
+|   \---templates
+|           index.html
+|           login.html
+|           
++---nginx
+|       dockerfile
+|       web.conf
+        
+```
